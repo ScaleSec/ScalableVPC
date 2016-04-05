@@ -199,7 +199,7 @@
           "Condition": "CreatePubSubAz3"
         },
         {
-          "Condition": "CreatePrivSubTier1Az3"
+          "Condition": "CreatePrivSubTier1Az2"
         },
         {
           "Fn::Not": [
@@ -965,6 +965,7 @@
       }
     },
     "Eip1": {
+      "Condition" : "CreatePrivSubTier1Az1",
       "DependsOn" : "GatewayToInternet",
       "Type": "AWS::EC2::EIP",
       "Properties": {
@@ -987,6 +988,7 @@
       }
     },
     "Eip2": {
+      "Condition" : "CreatePrivSubTier1Az2",
       "DependsOn" : "GatewayToInternet",
       "Type": "AWS::EC2::EIP",
       "Properties": {
@@ -1009,6 +1011,7 @@
       }
     },
     "Eip3": {
+      "Condition" : "CreatePrivSubTier1Az3",
       "DependsOn" : "GatewayToInternet",
       "Type": "AWS::EC2::EIP",
       "Properties": {
