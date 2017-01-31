@@ -6,16 +6,8 @@ Parameters:
     Description: CIDR block for the VPC
     Type: String
     Default: 10.0.0.0/16
-  VpcId:
-    Type: String
-    Description: Optional - VPC Id of existing VPC. Leave blank to create a new VPC.
-    Default: ''
-    AllowedPattern: "^(?:vpc-[0-9a-f]{8}|)$"
-    ConstraintDescription: VPC ID must begin with 'vpc-' or leave blank to have a
-      new VPC created.
   PubSubAz1Cidr:
-    Description: CIDR block for the public subnet in AZ1. Required if you don't specify
-      an existing VPC.
+    Description: CIDR block for the public subnet in AZ1. Required.
     Type: String
     MinLength: 9
     MaxLength: 18
@@ -92,21 +84,15 @@ Parameters:
     Default: 10.0.176.0/21
     AllowedPattern: "^(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})|$"
     ConstraintDescription: Must be a valid IPv4 CIDR formatted as x.x.x.x/x.
-  ConnectToInternet:
-    Description: Set to false if this VPC should not be connected to the Internet
-    Type: String
-    Default: 'true'
-    AllowedValues:
-    - 'true'
-    - 'false'
 Conditions:
-  CreateVpcResources:
-    Fn::Equals:
-    - Ref: VpcId
-    - ''
+  CreatePubSubAz1:
+    Fn::Not:
+    - Fn::Equals:
+      - Ref: PubSubAz1Cidr
+      - ''
   CreatePubSubAz2:
     Fn::And:
-    - Condition: CreateVpcResources
+    - Condition: CreatePubSubAz1
     - Fn::Not:
       - Fn::Equals:
         - Ref: PubSubAz2Cidr
@@ -119,9 +105,7 @@ Conditions:
         - Ref: PubSubAz3Cidr
         - ''
   CreatePrivSubTier1Az1:
-    Fn::And:
-    - Condition: CreateVpcResources
-    - Fn::Not:
+    Fn::Not:
       - Fn::Equals:
         - Ref: PrivSubTier1Az1Cidr
         - ''
@@ -164,16 +148,8 @@ Conditions:
       - Fn::Equals:
         - Ref: PrivSubTier2Az3Cidr
         - ''
-  AddInternetGateway:
-    Fn::And:
-    - Condition: CreateVpcResources
-    - Condition: CreatePrivSubTier1Az1
-    - Fn::Equals:
-      - Ref: ConnectToInternet
-      - true
 Resources:
   Vpc:
-    Condition: CreateVpcResources
     Type: AWS::EC2::VPC
     Properties:
       CidrBlock:
@@ -188,7 +164,6 @@ Resources:
         Value:
           Ref: AWS::StackName
   PubSubAz1:
-    Condition: CreateVpcResources
     Type: AWS::EC2::Subnet
     Properties:
       MapPublicIpOnLaunch: true
@@ -422,7 +397,6 @@ Resources:
       - Key: Name
         Value: Private AZ3
   PublicSubnetAz1RouteTableAssociation:
-    Condition: CreateVpcResources
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
       SubnetId:
@@ -494,7 +468,6 @@ Resources:
       RouteTableId:
         Ref: PrivateRouteTableAz3
   InternetGateway:
-    Condition: AddInternetGateway
     Type: AWS::EC2::InternetGateway
     Properties:
       Tags:
@@ -507,7 +480,6 @@ Resources:
         Value:
           Ref: AWS::StackName
   GatewayToInternet:
-    Condition: AddInternetGateway
     Type: AWS::EC2::VPCGatewayAttachment
     Properties:
       VpcId:
@@ -515,7 +487,6 @@ Resources:
       InternetGatewayId:
         Ref: InternetGateway
   PublicRouteTable:
-    Condition: CreateVpcResources
     Type: AWS::EC2::RouteTable
     Properties:
       VpcId:
@@ -529,7 +500,6 @@ Resources:
       - Key: Name
         Value: Public
   PublicRoute:
-    Condition: AddInternetGateway
     Type: AWS::EC2::Route
     Properties:
       RouteTableId:
@@ -614,12 +584,10 @@ Resources:
         Ref: PubSubAz3
 Outputs:
   VpcId:
-    Condition: CreateVpcResources
     Description: ID of the VPC
     Value:
       Ref: Vpc
   PubSubAz1Id:
-    Condition: CreateVpcResources
     Description: ID of the Public Subnet in AZ1
     Value:
       Ref: PubSubAz1
