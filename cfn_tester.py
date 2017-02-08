@@ -41,7 +41,7 @@ if vpc_max < 1:
 	sys.exit(0)
 
 # injest the template to test
-template_file = open('ScalableVPC1.yml')
+template_file = open('ScalableVPC.yml')
 cfn_template_body = template_file.read()
 template_file.close()
 
