@@ -41,9 +41,13 @@ if vpc_max < 1:
 	sys.exit(0)
 
 # injest the template to test
+<<<<<<< HEAD
+template_file = open('ScalableVPC2.yml')
+=======
 
 template_file = open('ScalableVPC.yml')
 
+>>>>>>> origin/yaml
 cfn_template_body = template_file.read()
 template_file.close()
 
@@ -110,7 +114,11 @@ def create_stack(stack_name,cfn_template_body,parameters):
 			StackName=stack_name,
 			TemplateBody=cfn_template_body,
 			Parameters=json.loads(parameters),
+			Capabilities=[
+				'CAPABILITY_NAMED_IAM',
+			],
 			DisableRollback=False
+
 		)
 	except Exception, e:
 		print "Error: \"%s\"" % (str(e))

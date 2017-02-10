@@ -8,26 +8,25 @@ Metadata:
     Label:
       default: "Network Configuration"
     Parameters:
-     -
-       VpcCidr
-     -
-       PubSubAz1Cidr
-     -
-       PubSubAz2Cidr
-     -
-       PubSubAz3Cidr
-     -
-       PrivSubTier1Az1Cidr
-     -
-       PrivSubTier1Az2Cidr
-     -
-       PrivSubTier1Az3Cidr
-     -
-       PrivSubTier2Az1Cidr
-     -
-       PrivSubTier2Az2Cidr
-     -
-       PrivSubTier2Az3Cidr
+     - VpcCidr
+     - NamePubSubAz1
+     - PubSubAz1Cidr
+     - NamePubSubAz2
+     - PubSubAz2Cidr
+     - NamePubSubAz3
+     - PubSubAz3Cidr
+     - NamePrivSubTier1Az1
+     - PrivSubTier1Az1Cidr
+     - NamePrivSubTier1Az2
+     - PrivSubTier1Az2Cidr
+     - NamePrivSubTier1Az3
+     - PrivSubTier1Az3Cidr
+     - NamePrivSubTier2Az1
+     - PrivSubTier2Az1Cidr
+     - NamePrivSubTier2Az2
+     - PrivSubTier2Az2Cidr
+     - NamePrivSubTier2Az3
+     - PrivSubTier2Az3Cidr
 Parameters:
   VpcCidr:
     Description: CIDR block for the VPC
@@ -122,6 +121,51 @@ Parameters:
     AllowedValues:
      - yes
      - no
+  NamePubSubAz1:
+    Description: "Name of PubSubAz1"
+    Type: String
+    Default: Public Subnet AZ1
+    ConstraintDescription: Subnet Name
+  NamePubSubAz2:
+    Description: "Name of PubSubAz2"
+    Type: String
+    Default: Public Subnet AZ2
+    ConstraintDescription: Subnet Name
+  NamePubSubAz3:
+    Description: "Name of PubSubAz3"
+    Type: String
+    Default: Public Subnet AZ3
+    ConstraintDescription: Subnet Name
+  NamePrivSubTier1Az1:
+    Description: "Name of PrivSubTier1Az1"
+    Type: String
+    Default: Private Subnet Tier 1 AZ1
+    ConstraintDescription: Subnet Name
+  NamePrivSubTier1Az2:
+    Description: "Name of PrivSubTier1Az2"
+    Type: String
+    Default: Private Subnet Tier 1 AZ2
+    ConstraintDescription: Subnet Name
+  NamePrivSubTier1Az3:
+    Description: "Name of PrivSubTier1Az3"
+    Type: String
+    Default: Private Subnet Tier 1 AZ3
+    ConstraintDescription: Subnet Name
+  NamePrivSubTier2Az1:
+    Description: "Name of PrivSubTier2Az1"
+    Type: String
+    Default: Private Subnet Tier 2 AZ1
+    ConstraintDescription: Subnet Name
+  NamePrivSubTier2Az2:
+    Description: "Name of PrivSubTier2Az2"
+    Type: String
+    Default: Private Subnet Tier 2 AZ2
+    ConstraintDescription: Subnet Name
+  NamePrivSubTier2Az3:
+    Description: "Name of PrivSubTier2Az3"
+    Type: String
+    Default: Private Subnet Tier 2 AZ3
+    ConstraintDescription: Subnet Name
 Conditions:
   CreatePubSubAz1:
     Fn::Not:
@@ -259,7 +303,8 @@ Resources:
       - Key: Network
         Value: Public
       - Key: Name
-        Value: Public Subnet AZ1
+        Value:
+          Ref: NamePubSubAz1
   PubSubAz2:
     Condition: CreatePubSubAz2
     Type: AWS::EC2::Subnet
@@ -281,7 +326,8 @@ Resources:
       - Key: Network
         Value: Public
       - Key: Name
-        Value: Public Subnet AZ2
+        Value:
+          Ref: NamePubSubAz2
   PubSubAz3:
     Condition: CreatePubSubAz3
     Type: AWS::EC2::Subnet
@@ -303,7 +349,8 @@ Resources:
       - Key: Network
         Value: Public
       - Key: Name
-        Value: Public Subnet AZ3
+        Value:
+          Ref: NamePubSubAz3
   PrivSubTier1Az1:
     Condition: CreatePrivSubTier1Az1
     Type: AWS::EC2::Subnet
@@ -324,7 +371,8 @@ Resources:
       - Key: Network
         Value: Private
       - Key: Name
-        Value: Private Subnet Tier1 AZ1
+        Value:
+          Ref: NamePrivSubTier1Az1
   PrivSubTier1Az2:
      Condition: CreatePrivSubTier1Az2
      Type: AWS::EC2::Subnet
@@ -345,7 +393,8 @@ Resources:
        - Key: Network
          Value: Private
        - Key: Name
-         Value: Private Subnet Tier1 AZ2
+         Value:
+          Ref: NamePrivSubTier1Az2
   PrivSubTier1Az3:
      Condition: CreatePrivSubTier1Az3
      Type: AWS::EC2::Subnet
@@ -366,7 +415,8 @@ Resources:
        - Key: Network
          Value: Private
        - Key: Name
-         Value: Private Subnet Tier1 AZ3
+         Value:
+          Ref: NamePrivSubTier1Az3
   PrivSubTier2Az1:
      Condition: CreatePrivSubTier2Az1
      Type: AWS::EC2::Subnet
@@ -387,7 +437,8 @@ Resources:
        - Key: Network
          Value: Private
        - Key: Name
-         Value: Private Subnet Tier2 AZ1
+         Value:
+          Ref: NamePrivSubTier2Az1
   PrivSubTier2Az2:
      Condition: CreatePrivSubTier2Az2
      Type: AWS::EC2::Subnet
@@ -408,7 +459,8 @@ Resources:
        - Key: Network
          Value: Private
        - Key: Name
-         Value: Private Subnet Tier2 AZ2
+         Value:
+          Ref: NamePrivSubTier2Az2
   PrivSubTier2Az3:
      Condition: CreatePrivSubTier2Az3
      Type: AWS::EC2::Subnet
@@ -429,7 +481,8 @@ Resources:
        - Key: Network
          Value: Private
        - Key: Name
-         Value: Private Subnet Tier2 AZ3
+         Value:
+          Ref: NamePrivSubTier2Az3
   PrivateRouteTableAz1:
     Condition: CreatePrivSubTier1Az1
     Type: AWS::EC2::RouteTable
