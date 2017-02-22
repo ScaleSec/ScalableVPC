@@ -42,7 +42,7 @@ if vpc_max < 1:
 
 # injest the template to test
 
-template_file = open('ScalableVPC2.yml')
+template_file = open('ScalableVpc.yml')
 
 cfn_template_body = template_file.read()
 template_file.close()
