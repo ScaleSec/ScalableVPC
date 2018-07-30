@@ -1,4 +1,4 @@
-#Scalable VPC Template
+# Scalable VPC Template
 AWS CloudFormation template for creating a VPC of a specified size with security features.
 
 Provides:
@@ -12,7 +12,7 @@ Provides:
 * Exports resource IDs for use by other automation
 * Default CIDRs from: ["Practical VPC Design"](https://medium.com/aws-activate-startup-blog/practical-vpc-design-8412e1a18dcc)
 
-##Architecture & Parameters:
+## Architecture & Parameters:
 ![Architecture & Parameters](https://raw.githubusercontent.com/ScaleSec/ScalableVPC/master/images/architecture.png "Architectures & Parameters")
 
 ## Resource Creation Logic:
